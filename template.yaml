@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  WeatherLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: ''
+      Handler: lambda_function.lambda_handler
+      Role:
+        'Fn::GetAtt':
+          - LambdaServiceRole
+          - Arn
+      Code:
+        S3Bucket: all-lambda-code-deploy-bucket
+        S3Key: weather-report.zip
+      Runtime: python3.9
+  LambdaServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: LambdaServiceRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: AWSLambdaBasicExecutionRole
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource: '*'
