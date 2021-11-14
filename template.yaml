@@ -1,17 +1,18 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: >
+  Lambda Deployment Template
 Resources:
   WeatherLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: ''
       Handler: lambda_function.lambda_handler
+      FunctionName: weather-report-lambda
       Role:
         'Fn::GetAtt':
           - LambdaServiceRole
           - Arn
-      Code:
-        S3Bucket: all-lambda-code-deploy-bucket
-        S3Key: weather-report.zip
+      CodeUri: s3://all-lambda-code-deploy-bucket/lambda_function.zip
       Runtime: python3.9
   LambdaServiceRole:
     Type: AWS::IAM::Role
