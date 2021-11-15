@@ -25,7 +25,7 @@ def generate_result(df):
     df = df.drop_duplicates()
 
     # Export to parquet
-    df.to_parquet('weather2016.parquet')
+    df.to_parquet('weatherReport.parquet')
 
     # Reading parquet
     df_parquet = pd.read_parquet('weather2016.parquet')
@@ -73,5 +73,3 @@ def lambda_handler(event,context):
 
     except Exception as e:
         print(e)
-
-# json_obj = lambda_handler()
