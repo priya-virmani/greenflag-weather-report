@@ -8,10 +8,7 @@ Resources:
     Properties:
       Handler: lambda_function.lambda_handler
       FunctionName: weather-report-lambda
-      Role:
-        'Fn::GetAtt':
-          - LambdaServiceRole
-          - Arn
+      Role: !GetAtt' LambdaServiceRole.Arn
       CodeUri: s3://all-lambda-code-deploy-bucket/lambda_function.zip
       Runtime: python3.9
   LambdaServiceRole:
@@ -39,3 +36,70 @@ Resources:
                   - 'logs:CreateLogStream'
                   - 'logs:PutLogEvents'
                 Resource: '*'
+  otherIAMRoles:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: otherIAMRoles
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: s3ReadWrite
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:*'
+                Resource: 
+                  - !Sub 'arn:aws:s3:::all-lambda-code-deploy-bucket'
+        - PolicyName: dynamoDBReadWrite
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:*'
+                Resource: 
+                  - !Sub 'arn:aws:dynamodb:us-east-2:109598254717:table/weatherReport'
+        - PolicyName: cloudWatchReadWrite
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'logs:*'
+                Resource: '*'
+  lambdaInvokeEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: "EventRule to Fire lambda"
+      State: "ENABLED"
+      EventPattern:
+        source:
+          - "aws.s3"
+        detail:
+          eventName:
+            - "PutObject"
+          requestParameters:
+            bucketName: 
+              - !Sub "all-lambda-code-deploy-bucket"
+            key: 
+              - "prefix": "data_files/"
+      Targets:
+        - Arn: !GetAtt WeatherLambda.Arn
+          Id: "WeatherLambdaTarget"
+  permissionForEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt WeatherLambda.Arn
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn: !GetAtt lambdaInvokeEventRule.Arn
