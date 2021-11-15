@@ -1,11 +1,21 @@
 import pandas as pd
 import json
+import csv
+import boto3
+
+s3_client = boto3.client('s3')
 
 def lambda_handler(event,context):
 
+    bucket = event['Records'][0]['s3']['bucket']['name']
+    key = event['Records'][0]['s3']['object']['key']
+
+    csv_file = s3_client.get_object(Bucket = bucket, Key = key)
+    
     #import data files
-    file1 = pd.read_csv("data_files/weather.20160201.csv")
+    # file1 = pd.read_csv("data_files/weather.20160201.csv")
     # file2 = pd.read_csv("data_files/weather.20160301.csv")
+    file1 = pd.read_csv(csv_file)
 
     #concat the data frames
     # df_csv = pd.concat([file1,file2],ignore_index=True)
