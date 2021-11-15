@@ -12,13 +12,13 @@ Resources:
       Role: !GetAtt LambdaServiceRole.Arn
       Runtime: python3.9
       Layers:
-        !Ref MyLambdaLayer
+        - !Ref MyLambdaLayer
   MyLambdaLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
       LayerName: MyLambdaLayer
       Description: Dependencies for Lambda
-      Content: lambda-layers/my-lambda-layer.zip
+      ContentUri: lambda-layers/my-lambda-layer.zip
       CompatibleRuntimes:
         - python3.9
   LambdaServiceRole:
