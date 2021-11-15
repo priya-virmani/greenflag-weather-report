@@ -8,7 +8,7 @@ Resources:
     Properties:
       Handler: lambda_function.lambda_handler
       FunctionName: weather-report-lambda
-      Role: !GetAtt' LambdaServiceRole.Arn
+      Role: !Ref LambdaServiceRole.Arn
       CodeUri: s3://all-lambda-code-deploy-bucket/lambda_function.zip
       Runtime: python3.9
   LambdaServiceRole:
@@ -94,12 +94,12 @@ Resources:
             key: 
               - "prefix": "data_files/"
       Targets:
-        - Arn: !GetAtt WeatherLambda.Arn
+        - Arn: !Ref WeatherLambda.Arn
           Id: "WeatherLambdaTarget"
   permissionForEventsToInvokeLambda:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !GetAtt WeatherLambda.Arn
+      FunctionName: !Ref WeatherLambda.Arn
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
-      SourceArn: !GetAtt lambdaInvokeEventRule.Arn
+      SourceArn: !Ref lambdaInvokeEventRule.Arn
