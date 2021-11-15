@@ -39,8 +39,8 @@ Resources:
                   - 'logs:CreateLogGroup'
                   - 'logs:CreateLogStream'
                   - 'logs:PutLogEvents'
-                Resource: 
-                  - !Sub arn:aws:logs:us-east-2:109598254717:log-group:/aws/lambda/weatherReportLogs               
+                Resource: '*'
+                  # - !Sub arn:aws:logs:us-east-2:109598254717:log-group:/aws/lambda/weatherReportLogs               
   otherIAMRoles:
     Type: AWS::IAM::Role
     Properties:
@@ -74,14 +74,14 @@ Resources:
                   - 'dynamodb:*'
                 Resource: 
                   - !Sub 'arn:aws:dynamodb:us-east-2:109598254717:table/weatherReport'
-        - PolicyName: cloudWatchReadWrite
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - 'logs:*'
-                Resource: '*'
+        # - PolicyName: cloudWatchReadWrite
+        #   PolicyDocument:
+        #     Version: '2012-10-17'
+        #     Statement:
+        #       - Effect: Allow
+        #         Action:
+        #           - 'logs:*'
+        #         Resource: '*'
   lambdaInvokeEventRule:
     Type: AWS::Events::Rule
     Properties:
