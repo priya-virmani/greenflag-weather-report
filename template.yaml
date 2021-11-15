@@ -96,10 +96,10 @@ Resources:
       Targets:
         - Arn: !GetAtt WeatherLambda.Arn
           Id: "WeatherLambdaTarget"
-  # permissionForEventsToInvokeLambda:
-  #   Type: AWS::Lambda::Permission
-  #   Properties:
-  #     FunctionName: !Ref WeatherLambda.Arn
-  #     Action: "lambda:InvokeFunction"
-  #     Principal: "events.amazonaws.com"
-  #     SourceArn: !GetAtt lambdaInvokeEventRule.Arn
+  permissionForEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref WeatherLambda.Arn
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn: !GetAtt lambdaInvokeEventRule.Arn
