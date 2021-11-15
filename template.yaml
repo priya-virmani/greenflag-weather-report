@@ -12,7 +12,7 @@ Resources:
       Role: !GetAtt LambdaServiceRole.Arn
       Runtime: python3.9
       Layers:
-        !Ref MyLambdaLayer
+        - !Ref MyLambdaLayer
   MyLambdaLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
