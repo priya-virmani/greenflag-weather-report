@@ -94,7 +94,7 @@ Resources:
             key: 
               - "prefix": "data_files/"
       Targets:
-        - Arn: !Ref WeatherLambda.Arn
+        - Arn: !GetAtt WeatherLambda.Arn
           Id: "WeatherLambdaTarget"
   permissionForEventsToInvokeLambda:
     Type: AWS::Lambda::Permission
@@ -102,4 +102,4 @@ Resources:
       FunctionName: !Ref WeatherLambda.Arn
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
-      SourceArn: !Ref lambdaInvokeEventRule.Arn
+      SourceArn: !GetAtt lambdaInvokeEventRule.Arn
