@@ -1,8 +1,5 @@
 import pandas as pd
-import json
-import csv
 import boto3
-import datetime
 
 s3_client = boto3.client('s3')
 dynamodb = boto3.client('dynamodb')
@@ -53,28 +50,28 @@ def generate_result(df):
     
     return out_dict
 
-def lambda_handler():#(event,context):
+def lambda_handler(event,context):
 
     try:
-        # bucket = event['Records'][0]['s3']['bucket']['name']
-        # key = event['Records'][0]['s3']['object']['key']
+        bucket = event['Records'][0]['s3']['bucket']['name']
+        key = event['Records'][0]['s3']['object']['key']
 
-        # csv_file = s3_client.get_object(Bucket = bucket, Key = key)
+        csv_file = s3_client.get_object(Bucket = bucket, Key = key)
         
         #import data files
-        file1 = pd.read_csv("data_files/weather.20160201.csv")
+        # file1 = pd.read_csv("data_files/weather.20160201.csv")
         # file2 = pd.read_csv("data_files/weather.20160301.csv")
         # file1 = pd.read_csv(csv_file)
 
         #concat the data frames
         # df_csv = pd.concat([file1,file2],ignore_index=True)
         
-        df_parquet_output = generate_result(file1)
-        print(df_parquet_output)
+        df_parquet_output = generate_result(csv_file)
+        # print(df_parquet_output)
         
         insert_data(df_parquet_output)
 
     except Exception as e:
         print(e)
 
-json_obj = lambda_handler()
+# json_obj = lambda_handler()
