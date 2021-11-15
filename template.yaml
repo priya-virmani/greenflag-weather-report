@@ -8,7 +8,7 @@ Resources:
     Properties:
       Handler: lambda_function.lambda_handler
       FunctionName: weather-report-lambda
-      Role: !Ref LambdaServiceRole.Arn
+      Role: !GetAtt LambdaServiceRole.Arn
       CodeUri: s3://all-lambda-code-deploy-bucket/lambda_function.zip
       Runtime: python3.9
   LambdaServiceRole:
