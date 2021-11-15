@@ -35,7 +35,8 @@ Resources:
                   - 'logs:CreateLogGroup'
                   - 'logs:CreateLogStream'
                   - 'logs:PutLogEvents'
-                Resource: '*'
+                Resource: 
+                  - !Sub arn:aws:logs:us-east-2:109598254717:log-group:/aws/lambda/weatherReportLogs               
   otherIAMRoles:
     Type: AWS::IAM::Role
     Properties:
