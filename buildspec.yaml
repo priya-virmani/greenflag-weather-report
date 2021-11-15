@@ -4,7 +4,7 @@ phases:
     runtime-versions:
       python: 3.9
     commands:
-      - aws cloudformation package --template-file template.yaml --s3-bucket <S3 artifacts bucket> --output-template-file outputTemplate.yaml
+      - aws cloudformation package --template-file template.yaml --s3-bucket all-lambda-code-deploy-bucket --output-template-file outputTemplate.yaml
 
 artifacts:
   type: zip
