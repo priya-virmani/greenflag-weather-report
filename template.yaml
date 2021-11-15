@@ -11,6 +11,10 @@ Resources:
       FunctionName: weather-report-lambda
       Role: !GetAtt LambdaServiceRole.Arn
       Runtime: python3.9
+  weatherReportLogs: 
+    Type: AWS::Logs::LogGroup
+    Properties: 
+      LogGroupName: weatherReportLogs
   LambdaServiceRole:
     Type: AWS::IAM::Role
     Properties:
