@@ -1,6 +1,9 @@
 import pandas as pd
 import boto3
 import csv
+import pyarrow as pa
+import pyarrow.parquet as pq
+import awswrangler as wr
 
 s3_client = boto3.client('s3')
 dynamodb = boto3.client('dynamodb')
@@ -17,19 +20,32 @@ def insert_data(recDict):
                 'Region': recDict.get('Region'),
             }
         )
+        
+# def write_pandas_parquet_to_s3(df, bucketName, keyName, fileName):
+#     # dummy dataframe
+#     table = pa.Table.from_pandas(df)
+#     pq.write_table(table, fileName)
+
+#     # upload to s3
+#     BucketName = bucketName
+#     with open(fileName) as f:
+#       object_data = f.read()
+#       s3_client.put_object(Body=object_data, Bucket=BucketName, Key=keyName)
     
 def generate_result(df):
 
     out_dict = {}
     
-    df = df[(df.ScreenTemperature > -50.0) & (df.ScreenTemperature < 60.0)]
+    df = df[(df.ScreenTemperature.astype(str) > '-50.0') & (df.ScreenTemperature.astype(str) < '60.0')]
     df = df.drop_duplicates()
 
     # Export to parquet
-    df.to_parquet('weatherReport.parquet')
+    wr.pandas.to_parquet(dataframe=df,path="s3://all-lambda-code-deploy-bucket/data_files/parquet/weatherReport.parquet")
+    # write_pandas_parquet_to_s3(df, "all-lambda-code-deploy-bucket", "data_files/parquet/weatherReport.parquet", "data_files/temp/file.parquet")
+    # df.to_parquet('weatherReport.parquet')
 
     # Reading parquet
-    df_parquet = pd.read_parquet('weather2016.parquet')
+    df_parquet = pd.read_parquet('./tmp/weatherReport.parquet')
 
     hottest_date = df_parquet.loc[df_parquet['ScreenTemperature'].idxmax()]
     
