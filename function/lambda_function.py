@@ -4,7 +4,7 @@ import csv
 import pyarrow as pa
 import pyarrow.parquet as pq
 from datetime import datetime
-# import awswrangler as wr
+import awswrangler as wr
 
 s3_client = boto3.client('s3')
 dynamodb = boto3.resource('dynamodb', region_name='us-east-2')
@@ -75,24 +75,28 @@ def lambda_handler(event,context):
         bucket = event['Records'][0]['s3']['bucket']['name']
         key = event['Records'][0]['s3']['object']['key']
         
+        path = f"s3://{bucket}/{key}"
+        raw_df = wr.s3.read_csv(path=path, path_suffix=['.csv'])
+        print(raw_df.head())
+        
         #Get S3 object
-        response = s3_client.get_object(Bucket = bucket, Key = key)
+        # response = s3_client.get_object(Bucket = bucket, Key = key)
         
-        #Read CSV File
-        csv_reader = response["Body"].read().decode("utf-8")
-        file1 = csv.reader(csv_reader.split('\r\n'))
+        # #Read CSV File
+        # csv_reader = response["Body"].read().decode("utf-8")
+        # file1 = csv.reader(csv_reader.split('\r\n'))
         
-        data=[]
-        header = next(file1)
-        for row in file1:
-            data.append(row)
-        df = pd.DataFrame(data=data, columns=header)
+        # data=[]
+        # header = next(file1)
+        # for row in file1:
+        #     data.append(row)
+        # df = pd.DataFrame(data=data, columns=header)
         
-        #Fetching the data from Dataframe
-        df_parquet_output = generate_result(df)
+        # #Fetching the data from Dataframe
+        # df_parquet_output = generate_result(df)
         
-        #Putting the items into DynamoDB
-        insert_data(df_parquet_output)
-
+        # #Putting the items into DynamoDB
+        # insert_data(df_parquet_output)
+        
     except Exception as e:
         print(e)
