@@ -4,8 +4,8 @@ Description: >
   Lambda Deployment Template
 Globals:
   Function:
-    Timeout: 300
-    
+    Timeout: 600
+
 Resources:
   WeatherLambda:
     Type: AWS::Serverless::Function
