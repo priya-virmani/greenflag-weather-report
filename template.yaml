@@ -73,7 +73,7 @@ Resources:
                   - 's3:*'
                 Resource: 
                   - !Sub 'arn:aws:s3:::all-lambda-code-deploy-bucket/*'
-                  - !Sub 'arn:aws:s3:::all-lambda-code-deploy-bucket''
+                  - !Sub 'arn:aws:s3:::all-lambda-code-deploy-bucket'
         - PolicyName: dynamoDBReadWrite
           PolicyDocument:
             Version: '2012-10-17'
