@@ -4,10 +4,10 @@ phases:
     runtime-versions:
       python: 3.9
     commands:
+      commands:
+      - echo Entered the install phase...
+      - pip install -r requirements.txt
       - aws cloudformation package --template-file template.yaml --s3-bucket all-lambda-code-deploy-bucket --output-template-file outputTemplate.yaml
-  build:
-    commands:
-      - pip install pandas
 
 artifacts:
   type: zip
