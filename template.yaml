@@ -48,7 +48,23 @@ Resources:
                   - 'logs:CreateLogStream'
                   - 'logs:PutLogEvents'
                 Resource: '*'
-                  # - !Sub arn:aws:logs:us-east-2:109598254717:log-group:/aws/lambda/weatherReportLogs               
+                  # - !Sub arn:aws:logs:us-east-2:109598254717:log-group:/aws/lambda/weatherReportLogs
+        - PolicyName: s3ReadWrite
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:GetObject'
+                  - 's3:PutObject'
+                  - 's3:DeleteObject'
+                Resource: 
+                  - !Sub 'arn:aws:s3:::all-lambda-code-deploy-bucket/*'
+              - Effect: Allow
+                Action:
+                  - 's3:ListBucket'
+                Resource: 
+                  - !Sub 'arn:aws:s3:::all-lambda-code-deploy-bucket'              
   otherIAMRoles:
     Type: AWS::IAM::Role
     Properties:
