@@ -1,5 +1,6 @@
 import pandas as pd
 import boto3
+import csv
 
 s3_client = boto3.client('s3')
 dynamodb = boto3.client('dynamodb')
@@ -56,17 +57,25 @@ def lambda_handler(event,context):
         bucket = event['Records'][0]['s3']['bucket']['name']
         key = event['Records'][0]['s3']['object']['key']
 
-        csv_file = s3_client.get_object(Bucket = bucket, Key = key)
-        
+        response = s3_client.get_object(Bucket = bucket, Key = key)
+        print("fetch s3 path")
         #import data files
         # file1 = pd.read_csv("data_files/weather.20160201.csv")
         # file2 = pd.read_csv("data_files/weather.20160301.csv")
+        csv_reader = response["Body"].read().decode("utf-8")
+        file1 = csv.reader(csv_reader.split('\r\n'))
+        data=[]
+        header = next(file1)
+        for row in file1:
+            data.append(row)
+        df = pd.DataFrame(data=data, columns=header)
         # file1 = pd.read_csv(csv_file)
-
+        print("creating dataframe")
+        
         #concat the data frames
         # df_csv = pd.concat([file1,file2],ignore_index=True)
-        
-        df_parquet_output = generate_result(csv_file)
+
+        df_parquet_output = generate_result(df)
         # print(df_parquet_output)
         
         insert_data(df_parquet_output)
