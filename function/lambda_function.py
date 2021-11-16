@@ -1,9 +1,9 @@
 import pandas as pd
 import boto3
-import csv
 import pyarrow as pa
 import pyarrow.parquet as pq
 from datetime import datetime
+import s3fs
 
 s3_client = boto3.client('s3')
 dynamodb = boto3.resource('dynamodb', region_name='us-east-2')
