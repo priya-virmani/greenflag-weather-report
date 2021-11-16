@@ -43,10 +43,11 @@ def generate_result(df):
     # # Export to parquet
     # wr.pandas.to_parquet(dataframe=df,path="s3://all-lambda-code-deploy-bucket/data_files/parquet/weatherReport.parquet")
     # # write_pandas_parquet_to_s3(df, "all-lambda-code-deploy-bucket", "data_files/parquet/weatherReport.parquet", "data_files/temp/file.parquet")
-    # # df.to_parquet('weatherReport.parquet')
+    
+    df.to_parquet(r's3://all-lambda-code-deploy-bucket/data_files/parquet/weatherReport.parquet')
 
     # # Reading parquet
-    # df_parquet = pd.read_parquet('./tmp/weatherReport.parquet')
+    df_parquet = pd.read_parquet(r's3://all-lambda-code-deploy-bucket/data_files/parquet/weatherReport.parquet')
 
     hottest_date = df.loc[pd.to_numeric(df['ScreenTemperature']).idxmax()]
     
@@ -73,10 +74,6 @@ def lambda_handler(event,context):
     try:
         bucket = event['Records'][0]['s3']['bucket']['name']
         key = event['Records'][0]['s3']['object']['key']
-        
-        path = f"s3://{bucket}/{key}"
-        raw_df = wr.s3.read_csv(path=path, path_suffix=['.csv'])
-        print(raw_df.head())
         
         #Get S3 object
         response = s3_client.get_object(Bucket = bucket, Key = key)
