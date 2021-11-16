@@ -70,9 +70,15 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - 's3:*'
+                  - 's3:GetObject'
+                  - 's3:PutObject'
+                  - 's3:DeleteObject'
                 Resource: 
                   - !Sub 'arn:aws:s3:::all-lambda-code-deploy-bucket/*'
+              - Effect: Allow
+                Action:
+                  - 's3:ListBucket'
+                Resource: 
                   - !Sub 'arn:aws:s3:::all-lambda-code-deploy-bucket'
         - PolicyName: dynamoDBReadWrite
           PolicyDocument:
