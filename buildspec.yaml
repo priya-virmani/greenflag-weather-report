@@ -5,7 +5,6 @@ phases:
       python: 3.10
     commands:
       - echo Entered the install phase...
-      # - pip install -r requirements.txt
       - aws cloudformation package --template-file template.yaml --s3-bucket all-lambda-code-deploy-bucket --output-template-file outputTemplate.yaml
 
 artifacts:

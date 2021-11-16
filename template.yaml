@@ -51,8 +51,8 @@ Resources:
                   - 'logs:CreateLogGroup'
                   - 'logs:CreateLogStream'
                   - 'logs:PutLogEvents'
-                Resource: '*'
-                  # - !Sub arn:aws:logs:us-east-2:109598254717:log-group:/aws/lambda/weatherReportLogs
+                Resource: 
+                   - !Sub 'arn:aws:logs:us-east-2:109598254717:log-group:/aws/lambda/weather-report-lambda'
         - PolicyName: s3ReadWrite
           PolicyDocument:
             Version: '2012-10-17'
@@ -77,55 +77,7 @@ Resources:
                 Action:
                   - 'dynamodb:*'
                 Resource: 
-                  - !Sub 'arn:aws:dynamodb:us-east-2:109598254717:table/weatherReport'             
-  # otherIAMRoles:
-  #   Type: AWS::IAM::Role
-  #   Properties:
-  #     RoleName: otherIAMRoles
-  #     AssumeRolePolicyDocument:
-  #       Version: '2012-10-17'
-  #       Statement:
-  #         - Effect: Allow
-  #           Principal:
-  #             Service:
-  #               - lambda.amazonaws.com
-  #           Action:
-  #             - 'sts:AssumeRole'
-  #     Path: /
-  #     Policies:
-  #       - PolicyName: s3ReadWrite
-  #         PolicyDocument:
-  #           Version: '2012-10-17'
-  #           Statement:
-  #             - Effect: Allow
-  #               Action:
-  #                 - 's3:GetObject'
-  #                 - 's3:PutObject'
-  #                 - 's3:DeleteObject'
-  #               Resource: 
-  #                 - !Sub 'arn:aws:s3:::all-lambda-code-deploy-bucket/*'
-  #             - Effect: Allow
-  #               Action:
-  #                 - 's3:ListBucket'
-  #               Resource: 
-  #                 - !Sub 'arn:aws:s3:::all-lambda-code-deploy-bucket'
-  #       - PolicyName: dynamoDBReadWrite
-  #         PolicyDocument:
-  #           Version: '2012-10-17'
-  #           Statement:
-  #             - Effect: Allow
-  #               Action:
-  #                 - 'dynamodb:*'
-  #               Resource: 
-  #                 - !Sub 'arn:aws:dynamodb:us-east-2:109598254717:table/weatherReport'
-        # - PolicyName: cloudWatchReadWrite
-        #   PolicyDocument:
-        #     Version: '2012-10-17'
-        #     Statement:
-        #       - Effect: Allow
-        #         Action:
-        #           - 'logs:*'
-        #         Resource: '*'
+                  - !Sub 'arn:aws:dynamodb:us-east-2:109598254717:table/weatherReport'
   lambdaInvokeEventRule:
     Type: AWS::Events::Rule
     Properties:
