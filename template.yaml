@@ -20,6 +20,8 @@ Resources:
       Description: Dependencies for Lambda
       ContentUri: lambda-layers/my-lambda-layer.zip
       CompatibleRuntimes:
+        - python3.6
+        - python3.7
         - python3.9
   LambdaServiceRole:
     Type: AWS::IAM::Role
