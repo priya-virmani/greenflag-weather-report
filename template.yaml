@@ -42,7 +42,16 @@ Resources:
               - 'sts:AssumeRole'
       Path: /
       Policies:
-        - PolicyName: AWSLambdaBasicExecutionRole
+        - PolicyName: lambdainvocation
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'lambda:*'
+                Resource: 
+                   - !Sub 'arn:aws:lambda:us-east-2:109598254717:function:weather-report-lambda'
+        - PolicyName: cloudwatchlogs
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
