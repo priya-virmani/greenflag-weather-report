@@ -3,7 +3,7 @@ import boto3
 import pyarrow as pa
 import pyarrow.parquet as pq
 from datetime import datetime
-import s3fs
+import io
 
 s3_client = boto3.client('s3')
 dynamodb = boto3.resource('dynamodb', region_name='us-east-2')
@@ -17,21 +17,28 @@ def insert_data(recDict):
                 'Year': recDict.get('Year'),
                 'Month': recDict.get('Month'),
                 'Date': recDict.get('Hottest date'),
-                'Temperature': recDict.get('Temperature'),
+                'Temperature': repr(recDict.get('Temperature')),
                 'Region': recDict.get('Region'),
             }
         )
         
-# def write_pandas_parquet_to_s3(df, bucketName, keyName, fileName):
-#     # dummy dataframe
-#     table = pa.Table.from_pandas(df)
-#     pq.write_table(table, fileName)
-
-#     # upload to s3
-#     BucketName = bucketName
-#     with open(fileName) as f:
-#       object_data = f.read()
-#       s3_client.put_object(Body=object_data, Bucket=BucketName, Key=keyName)
+def write_pandas_parquet_to_s3(df, bucketName, keyName,):
+    
+    # dummy dataframe
+    print("in write_pandas_parquet_to_s3")
+    out_buffer = io.BytesIO()
+    df.to_parquet(out_buffer, index=False)
+        
+    # upload to s3
+    s3_client.put_object(Body=out_buffer.getvalue(), Bucket=bucketName, Key=keyName)
+    
+    in_buffer = io.BytesIO()
+    client = boto3.resource('s3')
+    obj = client.Object(bucketName,keyName)
+    obj.download_fileobj(in_buffer)
+    
+    return in_buffer
+    
     
 def generate_result(df):
 
@@ -40,14 +47,12 @@ def generate_result(df):
     df = df[(df.ScreenTemperature.astype(str) > '-50.0') & (df.ScreenTemperature.astype(str) < '60.0')]
     df = df.drop_duplicates()
 
-    # # Export to parquet
-    # wr.pandas.to_parquet(dataframe=df,path="s3://all-lambda-code-deploy-bucket/data_files/parquet/weatherReport.parquet")
-    # # write_pandas_parquet_to_s3(df, "all-lambda-code-deploy-bucket", "data_files/parquet/weatherReport.parquet", "data_files/temp/file.parquet")
+    # Export to parquet
+    print("export df to parquet file")
+    in_buffer = write_pandas_parquet_to_s3(df, "all-lambda-code-deploy-bucket", "data_files/parquet/weatherReport.parquet")
     
-    df.to_parquet(r's3://all-lambda-code-deploy-bucket/data_files/parquet/weatherReport.parquet')
-
-    # # Reading parquet
-    df_parquet = pd.read_parquet(r's3://all-lambda-code-deploy-bucket/data_files/parquet/weatherReport.parquet')
+    # Reading parquet
+    df_parquet = pd.read_parquet(in_buffer)
 
     hottest_date = df.loc[pd.to_numeric(df['ScreenTemperature']).idxmax()]
     
