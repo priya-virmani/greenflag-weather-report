@@ -113,7 +113,6 @@ Resources:
               - !Sub "all-lambda-code-deploy-bucket"
             key: 
               - "prefix": "data_files/"
-              - "suffix": ".csv"
       Targets:
         - Arn: !GetAtt WeatherLambda.Arn
           Id: "WeatherLambdaTarget"
