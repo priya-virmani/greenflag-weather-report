@@ -57,8 +57,10 @@ Resources:
                   - s3:ListBucket
                   - s3:GetBucketLocation
                   - s3:GetBucketPolicy
+                  - s3:PutObject
+                  - s3:DeleteObject
                 Resource:
-                  - !Sub "arn:aws:s3:::all-lambda-code-deploy-bucket/data_files/*"     
+                  - !Sub "arn:aws:s3:::all-lambda-code-deploy-bucket/data_files/weather*"     
         - PolicyName: cloudwatchlogs
           PolicyDocument:
             Version: '2012-10-17'
@@ -111,6 +113,7 @@ Resources:
               - !Sub "all-lambda-code-deploy-bucket"
             key: 
               - "prefix": "data_files/"
+              - "suffix": ".csv"
       Targets:
         - Arn: !GetAtt WeatherLambda.Arn
           Id: "WeatherLambdaTarget"
