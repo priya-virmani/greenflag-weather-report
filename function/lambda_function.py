@@ -86,10 +86,10 @@ def lambda_handler(event,context):
         # #Read CSV File
         csv_df = pd.read_csv(response.get("Body"))
         
-        # #Fetching the data from Dataframe
+        #Fetching the data from Dataframe
         df_parquet_output = generate_result(csv_df)
         
-        # #Putting the items into DynamoDB
+        #Putting the items into DynamoDB
         insert_data(df_parquet_output)
 
     except Exception as e:
