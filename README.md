@@ -26,5 +26,5 @@ To run this project:
 1. Upload a CSV weather File to S3 bucket.
 2. It will trigger the lambda function to process the data.
 3. The lambda will consume the csv dataset and convert it into parquet format.
-4. The hottest day, temperature and region details will be stored into DynamoDB in weatherReport table.
+4. The process will find out the hottest day, temperature and region details and store them into DynamoDB in weatherReport table.
 ```
