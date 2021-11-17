@@ -48,9 +48,17 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - 'lambda:*'
+                  - lambda:InvokeFunction
                 Resource: 
                    - !Sub 'arn:aws:lambda:us-east-2:109598254717:function:weather-report-lambda'
+              - Effect: Allow
+                Action:
+                  - s3:ListAllMyBuckets
+                  - s3:ListBucket
+                  - s3:GetBucketLocation
+                  - s3:GetBucketPolicy
+                Resource:
+                  - !Sub "arn:aws:s3:::all-lambda-code-deploy-bucket/data_files/*"     
         - PolicyName: cloudwatchlogs
           PolicyDocument:
             Version: '2012-10-17'
